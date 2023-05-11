@@ -31,11 +31,9 @@ inner join Customer C on O.Customer = C.Id
 inner join Items I on OD.ItemId = I.Id
 
 WHERE C.Id =
-
 CASE
 WHEN @CustomerId is null  THEN C.Id
 ELSE @CustomerId
-
 END
 end
 

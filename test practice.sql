@@ -519,21 +519,54 @@ exec SP_addMovie_Cast 7,7,'Bajirao'
 
 		exec getMovies3YearOld
 		
---(14) create a stored proc to get list of all directors who have directed more then 2 movies
+--(14) create a stored proc to get list of all directors who have directed 2 or more movies
 
 
-		create proc getDirMov2()
+		create proc getDirMov2
 		as
 		begin
-		 select count(*) from movie_director
+		 select movie_director.dir_id,count(mov_id) from movie_director
 		 inner join director on director.dir_id = movie_director.dir_id
-		 group by movie_director.mov_id
-		 having count(*) > 2
+		 group by movie_director.dir_id
+		 having count(mov_id) >=2
 		end
 
+		exec getDirMov2
+
 --(15) create a stored proc to get list of all directors which have directed a movie which have rating greater than 3.
+
+		select distinct movie_director.dir_id from movie_director
+		 inner join director on director.dir_id = movie_director.dir_id
+		 inner join movie on movie.mov_id=movie_director.mov_id
+		 left join rating on rating.mov_id=movie.mov_id
+		 where rating.rev_stars>3
+		
 --(16) create a function to get worst director according to movie rating
+		alter function getName()
+		returns varchar(250)
+		as
+		begin
+		declare @string varchar(250) = ''
+			select @string += case when len(@string)=0 then  cast(movie_director.dir_id as varchar) 
+								   when @string like '%'+cast(movie_director.dir_id as varchar)+'%' then '' 
+								   else ',' + cast(movie_director.dir_id as varchar)  end  from rating
+
+			inner join movie on movie.mov_id=rating.mov_id
+			inner join movie_director on movie_director.mov_id=movie.mov_id
+			where num_of_rating = (select min(num_of_rating) from rating)
+		return @string
+		end
+
+		select dbo.getName()
+
+		select * from director where dir_id in (select value from STRING_SPLIT(dbo.getName(), ',') )
+
+
+
 --(17) create a function to get worst actor according to movie rating
+
+		
+
 --(18) create a parameterized stored procedure which accept genre and give movie accordingly 
 --(19) get list of movies that start with 'a' and end with letter 'e' and movie released before 2015
 --(20) get a movie with highest movie cast
