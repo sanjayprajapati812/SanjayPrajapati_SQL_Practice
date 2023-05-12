@@ -389,11 +389,6 @@ begin
 		rollback tran
 	end catch
 
-
-	-----------------
-
-
-
 	begin try
 		begin tran
 			exec sp_InsertIntoTreatment @PatientId,@DocterId,@NurseId,@Diagnosis,@Prescription,@TreatmentFee,@DOT,@Instruction,@TratmentId out
@@ -423,23 +418,4 @@ begin
 	end catch
 end
 
-exec returnTreatmentDet 'Yash',
-				   'Kotadiaya',
-				   'yash66@gmail.com',
-				   '457845789',
-				   '17, makan 121',
-				   '9510172874', 
-				   1,
-				   2,
-				   3,
-				   9,
-				   11,
-				   '2,4',
-				   '2,4',
-				   4500,
-				   '2019-10-10',
-				   'never Get well soon come again'
-
-
-
-				   select * from [user]
+exec returnTreatmentDet 'Yash','Kotadiaya','yash66@gmail.com','457845789','17, makan 121','9510172874', 1,2,3,9,11,'2,4','2,4',4500,'2019-10-10','never Get well soon come again'
